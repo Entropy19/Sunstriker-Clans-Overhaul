@@ -1,0 +1,2258 @@
+focus_tree = {
+	id = mountain_clans_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = MNC
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 5000 y = 0 }
+
+	focus = {
+		id = MNC_the_deal_is_done
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		x = 15
+		y = 0
+		cost = 10.00
+		available = { always = no }
+		bypass = {
+			has_country_flag = MNC_contract_is_up
+		}
+
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_the_deal_is_done"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	### Sunstriker Dominance ###
+
+	focus = {
+		id = MNC_sunstriker
+		icon = GFX_goal_national_populism
+		x = 0
+		y = 1
+		relative_position_id = MNC_the_deal_is_done
+		cost = 5.00
+		prerequisite = { focus = MNC_the_deal_is_done }
+		mutually_exclusive = { focus = MNC_resist_democratic }
+		mutually_exclusive = { focus = MNC_resist_communist }
+
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_sunstriker"
+			add_stability = -0.05
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_factory_takeovers
+		icon = GFX_focus_generic_industry_3
+		x = -1
+		y = 1
+		relative_position_id = MNC_sunstriker
+		cost = 5.00
+		prerequisite = { focus = MNC_sunstriker }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_factory_takeovers"
+			add_political_power = -25
+			add_manpower = -500
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_help_people
+		icon = GFX_focus_generic_treaty
+		x = -1
+		y = 3
+		relative_position_id = MNC_sunstriker
+		cost = 5.00
+		prerequisite = { focus = MNC_curb_bandity }
+		prerequisite = { focus = MNC_factory_takeovers }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_help_people"
+			add_popularity = { ideology = communism popularity = 0.05 }
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_recall_raiders
+		icon = GFX_goal_military_academy
+		x = 1
+		y = 1
+		relative_position_id = MNC_sunstriker
+		cost = 5.00
+		prerequisite = { focus = MNC_sunstriker }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_recall_raiders"
+			add_political_power = -30
+			add_manpower = 1000
+			add_equipment_to_stockpile = { type = infantry_equipment_0 amount = 1000 producer = GRI }
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_armouries
+		icon = GFX_goal_tfv_saf_support_ossebrandwag
+		x = 1
+		y = 3
+		relative_position_id = MNC_sunstriker
+		cost = 5.00
+		prerequisite = { focus = MNC_recall_raiders }
+		prerequisite = { focus = MNC_curb_bandity }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_armouries"
+			add_political_power = -25
+			add_manpower = -500
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_curb_bandity
+		icon = GFX_focus_generic_strike_at_democracy1
+		x = 0
+		y = 2
+		relative_position_id = MNC_sunstriker
+		cost = 5.00
+		prerequisite = { focus = MNC_recall_raiders focus = MNC_factory_takeovers }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_curb_bandity"
+			add_popularity = { ideology = fascism popularity = -0.15 }
+			swap_ideas = {
+				remove_idea = MNC_banditry
+				add_idea = MNC_banditry_1
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_journey_to_the_center_of_the_mind
+		icon = GFX_goal_supremacy_of_will
+		cost = 2.00
+		prerequisite = { focus = MNC_help_people }
+		prerequisite = { focus = MNC_armouries }
+		x = 0
+		y = 4
+		relative_position_id = MNC_sunstriker
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_journey_to_the_center_of_the_mind"
+			hidden_effect = {
+				country_event = { days = 1 id = mountain.2 }
+			}
+			custom_effect_tooltip = MNC_coma_tp
+		}
+	}
+
+	
+
+	### Kingdom of Brantbeak ###
+
+	focus = {
+		id = MNC_somewhat_sane
+		icon = GFX_focus_rom_royal_dictatorship
+		x = -5
+		y = 1
+		relative_position_id = MNC_journey_to_the_center_of_the_mind
+		cost = 5.00
+		available = { always = no }
+		prerequisite = {
+			focus = MNC_journey_to_the_center_of_the_mind
+		}
+		bypass = {
+			has_country_flag = MNC_a_moment_of_clarity
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_somewhat_sane"
+			custom_effect_tooltip = MNC_hes_sane_tp
+		}
+	}
+		focus = {
+		id = MNC_Road_Forward
+		icon = GFX_goal_military_academy
+		x = 1
+		y = 1
+		relative_position_id = MNC_somewhat_sane
+		cost = 5.00
+		prerequisite = { focus = MNC_somewhat_sane }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Road_Forward"
+			add_political_power = 25
+			country_event = { days = 1 id = mountain.27 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Runa_Question
+		icon = GFX_goal_generic_liberty_statue
+		x = -1
+		y = 1
+		relative_position_id = MNC_somewhat_sane
+		cost = 2.00
+		prerequisite = { focus = MNC_somewhat_sane}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Runa_Question"
+			add_political_power = 25
+            country_event = { days = 1 id = mountain.22 }			
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Strike_Runa
+		icon = GFX_goal_step_on_skull
+		x = 0
+		y = 1
+		relative_position_id = MNC_Runa_Question
+		cost = 2.00
+		prerequisite = { focus = MNC_Runa_Question}
+		mutually_exclusive = { focus = MNC_Sins_Past}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Strike_Runa"
+			add_political_power = -50
+			add_stability = 0.05
+			add_manpower = -750
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Sins_Past
+		icon = GFX_goal_generic_liberty_statue
+		x = -2
+		y = 1
+		relative_position_id = MNC_Runa_Question
+		cost = 2.00
+		prerequisite = { focus = MNC_Runa_Question}
+		mutually_exclusive = { focus = MNC_Strike_Runa}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Sins_Past"
+			add_political_power = 25
+			country_event = { days = 1 id = mountain.23 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Meet_Runa
+		icon = GFX_focus_generic_treaty
+		x = 0
+		y = 1
+		relative_position_id = MNC_Sins_Past
+		cost = 2.00
+		prerequisite = { focus = MNC_Sins_Past}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Meet_Runa"
+			add_political_power = 100
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			add_stability = 0.1
+			remove_ideas = MNC_democratic_resistance
+			country_event = { days = 1 id = mountain.24 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Head_of_Snake
+		icon = GFX_goal_secret_agents
+		x = 0
+		y = 1
+		relative_position_id = MNC_Strike_Runa
+		cost = 2.00
+		prerequisite = { focus = MNC_Strike_Runa}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Head_of_Snake"
+			add_political_power = -35
+			add_popularity = { ideology = democratic popularity = -0.1 }
+			add_stability = 0.1
+			remove_ideas = MNC_democratic_resistance
+			country_event = { days = 1 id = mountain.26 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}	
+focus = {
+		id = MNC_Eliminate_Rivals
+		icon = GFX_goal_generic_military_sphere
+		x = 0
+		y = 1
+		relative_position_id = MNC_Road_Forward
+		cost = 5.00
+		prerequisite = { focus = MNC_Road_Forward}
+		mutually_exclusive = { focus = MNC_Integrate_Clans}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Rival_Clans"
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Integrate_Clans
+		icon = GFX_goal_generic_military_sphere
+		x = 2
+		y = 1
+		relative_position_id = MNC_Road_Forward
+		cost = 5.00
+		prerequisite = { focus = MNC_Road_Forward}
+		mutually_exclusive = { focus = MNC_Eliminate_Rivals}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Rival_Clans"
+			add_stability = -0.05
+			add_manpower = 3000
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Of_People
+		icon = GFX_goal_KTG_Bookstack
+		x = 0
+		y = 1
+		relative_position_id = MNC_Eliminate_Rivals
+		cost = 5.00
+		prerequisite = { focus = MNC_Integrate_Clans focus = MNC_Eliminate_Rivals }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Of_People"
+			add_stability = 0.05
+			decrease_illiteracy = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Of_Industry
+		icon = GFX_goal_generic_construct_civilian
+		x = 0
+		y = 1
+		relative_position_id = MNC_Integrate_Clans
+		cost = 5.00
+		prerequisite = { focus = MNC_Integrate_Clans focus = MNC_Eliminate_Rivals }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Of_Industry"
+			add_political_power = 25
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Clear_Sky
+		icon = GFX_goal_supremacy_of_will
+		x = -1
+		y = 1
+		relative_position_id = MNC_Of_People
+		cost = 5.00
+		prerequisite = { focus = MNC_Of_Industry }
+		prerequisite = { focus = MNC_Of_People }
+		prerequisite = { focus = MNC_Head_of_Snake focus = MNC_Meet_Runa }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Of_Industry"
+			add_political_power = 25
+			country_event = { days = 1 id = mountain.28 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	
+	### Constitutional Monarchy ###
+	
+	focus = {
+		id = MNC_Runa_Monarchy
+		icon = GFX_goal_generic_liberty_statue
+		x = -5
+		y = 1
+		relative_position_id = MNC_Clear_Sky
+		cost = 5.00
+		prerequisite = { focus = MNC_Clear_Sky}
+		mutually_exclusive = { focus = MNC_Old_Ways}
+		mutually_exclusive = { focus = MNC_Into_Future}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Runa_Monarchy"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	
+	### Past Glories ###
+	
+	focus = {
+		id = MNC_Old_Ways
+		icon = GFX_focus_rom_royal_dictatorship
+		x = 0
+		y = 1
+		relative_position_id = MNC_Clear_Sky
+		cost = 5.00
+		prerequisite = { focus = MNC_Clear_Sky}
+		mutually_exclusive = { focus = MNC_Runa_Monarchy}
+		mutually_exclusive = { focus = MNC_Into_Future}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Old_Ways"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Lost_Not_Forgotten
+		icon = GFX_goal_unicorn_academy
+		x = 0
+		y = 1
+		relative_position_id = MNC_Old_Ways
+		cost = 5.00
+		prerequisite = { focus = MNC_Old_Ways}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Lost_Not_Forgotten"
+			add_political_power = 25
+			add_ideas = MNC_not_forgotten
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Support_Craftspeople
+		icon = GFX_goal_mountain_mine
+		x = -1
+		y = 1
+		relative_position_id = MNC_Lost_Not_Forgotten
+		cost = 5.00
+		prerequisite = { focus = MNC_Lost_Not_Forgotten}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Support_Craftspeople"
+			add_ideas = MNC_master_crafter
+			industrial_capacity_factory = 1
+						random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Seek_Knowledge
+		icon = GFX_goal_bookstack
+		x = 1
+		y = 1
+		relative_position_id = MNC_Lost_Not_Forgotten
+		cost = 5.00
+		prerequisite = { focus = MNC_Lost_Not_Forgotten}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Seek_Knowledge"
+			add_research_slot = 1
+			add_ideas = big_science_base
+			hidden_effect = { set_country_flag = big_science_base_unlocked }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Mountain_Command
+		icon = GFX_goal_nested_fortifications
+		x = -1
+		y = 1
+		relative_position_id = MNC_Support_Craftspeople
+		cost = 5.00
+		prerequisite = { focus = MNC_Support_Craftspeople}
+		prerequisite = { focus = MNC_Seek_Knowledge}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Mountain_Command"
+			add_political_power = 50
+			add_manpower = 10000
+			add_ideas = MNC_mountain_command
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Forges
+		icon = GFX_goal_purchase_tech
+		x = 1
+		y = 1
+		relative_position_id = MNC_Support_Craftspeople
+		cost = 5.00
+		prerequisite = { focus = MNC_Support_Craftspeople}
+		prerequisite = { focus = MNC_Seek_Knowledge}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Forges"
+			swap_ideas = {
+				remove_idea = MNC_not_forgotten
+				add_idea = MNC_not_forgotten_1
+				}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Look_North
+		icon = GFX_focus_generic_industry_3
+		x = 1
+		y = 1
+		relative_position_id = MNC_Seek_Knowledge
+		cost = 5.00
+		prerequisite = { focus = MNC_Support_Craftspeople}
+		prerequisite = { focus = MNC_Seek_Knowledge}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Look_North"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_No_Bandits
+		icon = GFX_goal_crown_and_swords
+		x = -1
+		y = 1
+		relative_position_id = MNC_Forges
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Command}
+		prerequisite = { focus = MNC_Forges}
+		prerequisite = { focus = MNC_Look_North}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_No_Bandits"
+			remove_ideas = {
+				remove_idea = MNC_banditry_1
+			}
+			add_stability = .1
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Resources
+		icon = GFX_Steel
+		x = 1
+		y = 1
+		relative_position_id = MNC_Forges
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Command}
+		prerequisite = { focus = MNC_Forges}
+		prerequisite = { focus = MNC_Look_North}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Resources"
+			add_resource = {
+				type = crystals
+				amount = 8
+				state = 475
+			}
+			add_resource = {
+				type = tungsten
+				amount = 10
+				state = 475
+			}
+			add_resource = {
+				type = crystals
+				amount = 8
+				state = 476
+			}
+			add_resource = {
+				type = chromium
+				amount = 12
+				state = 476
+			}
+			add_resource = {
+				type = crystals
+				amount = 8
+				state = 459
+			}
+			add_resource = {
+				type = steel
+				amount = 16
+				state = 459
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Mountain_Awakens
+		icon = GFX_focus_GRE_a_land_of_mountains
+		x = 1
+		y = 1
+		relative_position_id = MNC_No_Bandits
+		cost = 5.00
+		prerequisite = { focus = MNC_No_Bandits}
+		prerequisite = { focus = MNC_Resources}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Mountain_Awakens"
+			swap_ideas = {
+				remove_idea = MNC_not_forgotten_1
+				add_idea = MNC_mountains_awaken
+				}
+				increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_More_Forts
+		icon = GFX_fortification_gen
+		x = -3
+		y = 1
+		relative_position_id = MNC_Mountain_Awakens
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Awakens}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_More_Forts"
+			add_ideas = MNC_mountain_forts
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Special_Units
+		icon = GFX_Dare_to_Die_Corps
+		x = 0
+		y = 1
+		relative_position_id = MNC_More_Forts
+		cost = 5.00
+		prerequisite = { focus = MNC_More_Forts}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Special_Units"
+			add_political_power = 25
+			add_ideas = MNC_sunstriker_guard
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Mountain_Warfare
+		icon = GFX_goal_military_academy
+		x = 0
+		y = 1
+		relative_position_id = MNC_Better_Guns
+		cost = 5.00
+		prerequisite = { focus = MNC_Better_Guns}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Mountain_Warfare"
+			swap_ideas = {
+				remove_idea = MNC_mountain_command
+				add_idea = MNC_advanced_mountain
+				}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Light_Armour
+		icon = GFX_goal_generic_defence
+		x = -1
+		y = 1
+		relative_position_id = MNC_Special_Units
+		cost = 5.00
+		prerequisite = { focus = MNC_Special_Units}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Light_Armour"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Better_Guns
+		icon = GFX_goal_CVA_techs
+		x = 1
+		y = 1
+		relative_position_id = MNC_Special_Units
+		cost = 5.00
+		prerequisite = { focus = MNC_Special_Units}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Better_Guns"
+			add_political_power = 25
+			add_ideas = MNC_advanced_metals
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Steel_Bones
+		icon = GFX_focus_ETH_freedom_at_gunpoint
+		x = 0
+		y = 1
+		relative_position_id = MNC_Light_Armour
+		cost = 5.00
+		prerequisite = { focus = MNC_Light_Armour}
+		prerequisite = { focus = MNC_Better_Guns}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Steel_Bones"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Workshops
+		icon = GFX_goal_generic_lau_factory
+		x = 3
+		y = 1
+		relative_position_id = MNC_Mountain_Awakens
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Awakens}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Workshops"
+			add_political_power = 25
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Better_Buildings
+		icon = GFX_goal_generic_construct_public_housing
+		x = 0
+		y = 1
+		relative_position_id = MNC_Workshops
+		cost = 5.00
+		prerequisite = { focus = MNC_Workshops}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Better_Buildings"
+			add_political_power = 25
+			add_ideas = MNC_stone
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_More_Science
+		icon = GFX_goal_generic_lightbulb
+		x = -1
+		y = 1
+		relative_position_id = MNC_Better_Buildings
+		cost = 5.00
+		prerequisite = { focus = MNC_Better_Buildings}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_More_Science"
+			add_political_power = 10
+			add_research_slot = 1
+			add_ideas = MNC_trade_college
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_More_Mils
+		icon = GFX_goal_generic_ordnance
+		x = 0
+		y = 1
+		relative_position_id = MNC_More_Science
+		cost = 5.00
+		prerequisite = { focus = MNC_More_Science}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_More_Mils"
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_More_Civs
+		icon = GFX_goal_economic_control
+		x = 1
+		y = 1
+		relative_position_id = MNC_Better_Buildings
+		cost = 5.00
+		prerequisite = { focus = MNC_Better_Buildings}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_More_Civs"
+			increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Discover_Mithril
+		icon = GFX_goal_generic_coal_mining
+		x = 0
+		y = 1
+		relative_position_id = MNC_More_Civs
+		cost = 5.00
+		prerequisite = { focus = MNC_More_Civs}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Discover_Mithril"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Making_Amends
+		icon = GFX_goal_improve_relations_pony_griffon
+		x = 0
+		y = 1
+		relative_position_id = MNC_Mountain_Awakens
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Awakens}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Making_Amends"
+			add_ideas = MNC_preparations
+			
+	}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Export_Goods
+		icon = GFX_goal_generic_positive_trade_relations
+		x = -1
+		y = 1
+		relative_position_id = MNC_Trade_East
+		cost = 5.00
+		prerequisite = { focus = MNC_Trade_East focus = MNC_Trade_West }
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			owns_state = 480
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Export_Goods"
+			add_ideas = MNC_consolidate
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Trade_East
+		icon = GFX_focus_riv_form_federation
+		x = 1
+		y = 1
+		relative_position_id = MNC_Making_Amends
+		cost = 5.00
+		prerequisite = { focus = MNC_Making_Amends}
+		mutually_exclusive = { focus = MNC_Trade_West}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			has_war = no
+			is_subject = no
+		}
+		bypass = {
+			owns_state = 480 #Windford
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_mountain_expansion"
+			custom_effect_tooltip = MNC_border_conflict_FAT_tp
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Trade_West
+		icon = GFX_goal_griffonian_republic
+		x = -1
+		y = 1
+		relative_position_id = MNC_Making_Amends
+		cost = 5.00
+		prerequisite = { focus = MNC_Making_Amends}
+		mutually_exclusive = { focus = MNC_Trade_East}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Trade_West"
+			add_political_power = -50
+			create_wargoal = {
+    type = take_state_focus
+    target = FAT
+    generator = { 480 548 }
+    expire = 0
+	}
+
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Modern_Military
+		icon = GFX_specialforces_gen
+		x = -1
+		y = 1
+		relative_position_id = MNC_Mountain_Warfare
+		cost = 5.00
+		prerequisite = { focus = MNC_Mountain_Warfare}
+		prerequisite = { focus = MNC_Steel_Bones}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Trade_West"
+			add_political_power = 25
+			swap_ideas = {
+				remove_idea = MNC_sunstriker_guard
+				add_idea = MNC_second_to_none
+				}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Modern_Industry
+		icon = GFX_goal_generic_production
+		x = 1
+		y = 1
+		relative_position_id = MNC_More_Mils
+		cost = 5.00
+		prerequisite = { focus = MNC_More_Mils}
+		prerequisite = { focus = MNC_Discover_Mithril}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Modern_Industry"
+			add_ideas = proper_science_base
+			hidden_effect = { set_country_flag = proper_science_base_unlocked }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Complete_Reforms
+		icon = GFX_goal_agency
+		x = 0
+		y = 2
+		relative_position_id = MNC_Export_Goods
+		cost = 5.00
+		prerequisite = { focus = MNC_Export_Goods}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Trade_West"
+			if = {
+				limit = { has_government = neutrality }
+				country_event = { id = mountain.6 days = 1 }
+			}
+			if = {
+				limit = { has_government = fascism }
+				country_event = { id = mountain.7 days = 1 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {
+		id = MNC_Masters_Of_Stone
+		icon = GFX_Transformation_of_Nature
+		x = 0
+		y = 1
+		relative_position_id = MNC_Complete_Reforms
+		cost = 5.00
+		prerequisite = { focus = MNC_Modern_Industry}
+		prerequisite = { focus = MNC_Modern_Military}
+		prerequisite = { focus = MNC_Complete_Reforms}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: MNC_Trade_West"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	
+	
+	
+	### Into the Future ###
+	
+	focus = {
+		id = MNC_Into_Future
+		icon = GFX_goal_gold_up
+		x = 5
+		y = 1
+		relative_position_id = MNC_Clear_Sky
+		cost = 5.00
+		prerequisite = { focus = MNC_Clear_Sky}
+		mutually_exclusive = { focus = MNC_Old_Ways}
+		mutually_exclusive = { focus = MNC_Runa_Monarchy}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_Into_Future"
+			add_political_power = 25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+		
+	### Democratic Takeover ###
+
+	focus = {
+		id = MNC_resist_democratic
+		icon = GFX_goal_generic_liberty_statue
+		x = -18
+		y = 1
+		relative_position_id = MNC_the_deal_is_done
+		cost = 7.00
+		prerequisite = { focus = MNC_the_deal_is_done }
+		mutually_exclusive = { focus = MNC_sunstriker }
+		mutually_exclusive = { focus = MNC_resist_communist }
+
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_resist_democratic"
+			country_event = { days = 1 id = mountain.16 }
+		}
+	}
+
+	focus = {
+		id = MNC_kill_commies
+		icon = GFX_goal_step_on_skull
+		x = -1
+		y = 1
+		relative_position_id = MNC_resist_democratic
+		cost = 7.00
+		prerequisite = { focus = MNC_resist_democratic }
+		mutually_exclusive = { focus = MNC_integrate_commies }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_kill_commies"
+			remove_ideas = MNC_communist_resistance
+			add_manpower = -2500
+			add_popularity = { ideology = communism popularity = -0.10 }
+			add_equipment_to_stockpile = { type = infantry_equipment_0 amount = 1000 producer = GRI }
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = MNC_integrate_commies
+		icon = GFX_goal_conscription
+		x = 1
+		y = 1
+		relative_position_id = MNC_resist_democratic
+		cost = 7.00
+		prerequisite = { focus = MNC_resist_democratic }
+		mutually_exclusive = { focus = MNC_kill_commies }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_integrate_commies"
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			remove_ideas = MNC_communist_resistance
+			add_popularity = { ideology = communism popularity = 0.10 }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_hunt_down_eriviar
+		icon = GFX_goal_secret_agents
+		x = 0
+		y = 2
+		relative_position_id = MNC_resist_democratic
+		cost = 7.00
+		prerequisite = { focus = MNC_integrate_commies focus = MNC_kill_commies }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_hunt_down_eriviar"
+			remove_ideas = MNC_sunstriker_resistance
+			add_popularity = { ideology = fascism popularity = -0.10 }
+			add_manpower = -2500
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = MNC_educate_people
+		icon = GFX_goal_KTG_Bookstack
+		x = -2
+		y = 1
+		relative_position_id = MNC_hunt_down_eriviar
+		cost = 7.00
+		prerequisite = { focus = MNC_hunt_down_eriviar }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_educate_people"
+			add_political_power = 50
+			decrease_illiteracy = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_railroads
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 10.00
+		prerequisite = { focus = MNC_hunt_down_eriviar }
+		x = 0
+		y = 1
+		relative_position_id = MNC_hunt_down_eriviar
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_railroads"
+			476 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			477 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			459 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			475 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_rebuild_stuff
+		icon = GFX_goal_generic_construct_civilian
+		x = -1
+		y = 2
+		relative_position_id = MNC_hunt_down_eriviar
+		cost = 10.00
+		prerequisite = { focus = MNC_railroads }
+		prerequisite = { focus = MNC_educate_people }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_rebuild_stuff"
+			swap_ideas = {
+				remove_idea = MNC_shattered_economy
+				add_idea = MNC_back_on_track
+			}
+			increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_reinforce_government
+		icon = GFX_goal_government_icon
+		cost = 10.00
+		prerequisite = { focus = MNC_hunt_down_eriviar }
+		x = 2
+		y = 1
+		relative_position_id = MNC_hunt_down_eriviar
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_reinforce_government"
+			add_political_power = 100
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.10 }
+			if = {
+				limit = { has_completed_focus = MNC_integrate_commies }
+				add_popularity = { ideology = communism popularity = 0.05 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_armed_citizens
+		icon = GFX_goal_generic_military_sphere
+		x = 1
+		y = 2
+		relative_position_id = MNC_hunt_down_eriviar
+		cost = 10.00
+		prerequisite = { focus = MNC_reinforce_government }
+		prerequisite = { focus = MNC_railroads }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_armed_citizens"
+			add_political_power = 25
+			add_manpower = 1000
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_republican_referendum
+		icon = GFX_goal_griffonian_republic
+		prerequisite = {
+			focus = MNC_armed_citizens
+		}
+		prerequisite = {
+			focus = MNC_rebuild_stuff
+		}
+		x = 0
+		y = 3
+		relative_position_id = MNC_hunt_down_eriviar
+		cost = 5.00
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_republican_referendum"
+			country_event = { days = 1 id = mountain.17 }
+		}
+	}
+
+	focus = {
+		id = MNC_completely_education
+		icon = GFX_focus_generic_treaty
+		available = { has_country_flag = MNC_independant_republic }
+		prerequisite = { focus = MNC_republican_referendum }
+		x = -1
+		y = 1
+		relative_position_id = MNC_republican_referendum
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_completely_education"
+			add_research_slot = 1
+			decrease_illiteracy = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = MNC_arm_citizens
+		icon = GFX_goal_generic_small_arms
+		available = { has_country_flag = MNC_independant_republic }
+		prerequisite = { focus = MNC_republican_referendum }
+		x = 1
+		y = 1
+		relative_position_id = MNC_republican_referendum
+		cost = 7.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_arm_citizens"
+			add_manpower = 2500
+			add_stability = 0.05
+			add_equipment_to_stockpile = { type = infantry_equipment_0 amount = 1500 producer = GRI }
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_write_const
+		icon = GFX_goal_constitutional_guarantees
+		available = { has_country_flag = MNC_independant_republic }
+		prerequisite = { focus = MNC_arm_citizens }
+		prerequisite = { focus = MNC_completely_education }
+		x = 0
+		y = 2
+		relative_position_id = MNC_republican_referendum
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_write_const"
+			add_ideas = MNC_new_constitution
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_fix_economy_f
+		icon = GFX_goal_gold_up
+		prerequisite = { focus = MNC_write_const }
+		prerequisite = { focus = MNC_completely_education }
+		x = -1
+		y = 3
+		relative_position_id = MNC_republican_referendum
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_fix_economy_f"
+			remove_ideas = MNC_back_on_track
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_expand_guard
+		icon = GFX_focus_chi_army_reform
+		available = { has_country_flag = MNC_independant_republic }
+		prerequisite = { focus = MNC_arm_citizens }
+		prerequisite = { focus = MNC_write_const }
+		x = 1
+		y = 3
+		relative_position_id = MNC_republican_referendum
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_expand_guard"
+			swap_ideas = {
+				remove_idea = MNC_democratic_guard
+				add_idea = MNC_republican_guard
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = MNC_model_society
+		icon = GFX_goal_agrarian_reform
+		prerequisite = { focus = MNC_expand_guard }
+		prerequisite = { focus = MNC_fix_economy_f }
+		x = 0
+		y = 4
+		relative_position_id = MNC_republican_referendum
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_model_society"
+			add_political_power = 50
+			increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_new_republic
+		icon = GFX_goal_government_icon
+		cost = 5.00
+		prerequisite = { focus = MNC_model_society }
+		x = 0
+		y = 6
+		relative_position_id = MNC_republican_referendum
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_new_republic"
+			country_event = { days = 1 id = mountain.19 }
+		}
+	}
+
+	### Communist Takeover ###
+
+	focus = {
+		id = MNC_resist_communist
+		icon = GFX_focus_prc_agrarian_socialism
+		x = 18
+		y = 1
+		relative_position_id = MNC_the_deal_is_done
+		cost = 10.00
+		prerequisite = { focus = MNC_the_deal_is_done }
+		mutually_exclusive = { focus = MNC_sunstriker }
+		mutually_exclusive = { focus = MNC_resist_democratic }
+
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_resist_communist"
+			country_event = { days = 1 id = mountain.20 }
+		}
+	}
+
+	focus = {
+		id = MNC_kill_democrats
+		icon = GFX_goal_support_communism
+		x = -1
+		y = 1
+		relative_position_id = MNC_resist_communist
+		cost = 7.00
+		prerequisite = { focus = MNC_resist_communist }
+		mutually_exclusive = { focus = MNC_integrate_democrats }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_kill_democrats"
+			remove_ideas = MNC_democratic_resistance
+			add_manpower = -2500
+			add_popularity = { ideology = democratic popularity = -0.25 }
+			add_stability = 0.05
+			add_political_power = 100
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_integrate_democrats
+		icon = GFX_goal_generic_war_with_comintern
+		x = 1
+		y = 1
+		relative_position_id = MNC_resist_communist
+		cost = 7.00
+		prerequisite = { focus = MNC_resist_communist }
+		mutually_exclusive = { focus = MNC_kill_democrats }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_integrate_democrats"
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			remove_ideas = MNC_democratic_resistance
+			add_popularity = { ideology = democratic popularity = 0.15 }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_kill_eriviar_again
+		icon = GFX_goal_secret_agents
+		x = 0
+		y = 2
+		relative_position_id = MNC_resist_communist
+		cost = 7.00
+		prerequisite = { focus = MNC_integrate_democrats focus = MNC_kill_democrats }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_kill_eriviar_again"
+			remove_ideas = MNC_sunstriker_resistance
+			add_popularity = { ideology = fascism popularity = -0.10 }
+			add_manpower = -2500
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = MNC_reinforce_government_commie
+		icon = GFX_focus_generic_soviet_politics
+		cost = 10.00
+		prerequisite = { focus = MNC_kill_eriviar_again }
+		x = -2
+		y = 1
+		relative_position_id = MNC_kill_eriviar_again
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_reinforce_government_commie"
+			add_war_support = 0.05
+			add_stability = 0.05
+			add_popularity = { ideology = communism popularity = 0.10 }
+			if = {
+				limit = { has_completed_focus = MNC_integrate_democrats }
+				add_popularity = { ideology = democratic popularity = 0.10 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = MNC_mass_conscription
+		icon = GFX_goal_military_academy
+		x = -1
+		y = 2
+		relative_position_id = MNC_kill_eriviar_again
+		cost = 10.00
+		prerequisite = { focus = MNC_reinforce_government_commie }
+		prerequisite = { focus = MNC_railroads_commie }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_mass_conscription"
+			add_political_power = -100
+			add_ideas = extensive_conscription
+			add_manpower = 15000
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = MNC_railroads_commie
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 10.00
+		prerequisite = { focus = MNC_kill_eriviar_again }
+		x = 0
+		y = 1
+		relative_position_id = MNC_kill_eriviar_again
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_railroads_commie"
+			476 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			477 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			459 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			475 = {	add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_commie_education
+		icon = GFX_focus_generic_socialist_science
+		x = 2
+		y = 1
+		relative_position_id = MNC_kill_eriviar_again
+		cost = 7.00
+		prerequisite = { focus = MNC_kill_eriviar_again }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_commie_education"
+			add_popularity = { ideology = communism popularity = 0.05 }
+			decrease_illiteracy = yes
+		}
+	}
+
+	focus = {
+		id = MNC_rebuild_stuff_commie_way
+		icon = GFX_goal_generic_soviet_construction
+		x = 1
+		y = 2
+		relative_position_id = MNC_kill_eriviar_again
+		cost = 10.00
+		prerequisite = { focus = MNC_railroads_commie }
+		prerequisite = { focus = MNC_commie_education }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_rebuild_stuff_commie_way"
+			swap_ideas = {
+				remove_idea = MNC_shattered_economy
+				add_idea = MNC_back_on_track
+			}
+			increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_back_to_raiding
+		icon = GFX_goal_ideology_totalist
+		x = 0
+		y = 3
+		relative_position_id = MNC_kill_eriviar_again
+		cost = 5.00
+		prerequisite = { focus = MNC_rebuild_stuff_commie_way }
+		prerequisite = { focus = MNC_mass_conscription }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_back_to_raiding"
+			custom_effect_tooltip = MNC_red_bandits_tp
+			hidden_effect = {
+				set_country_flag = MNC_red_bandits
+			}
+		}
+	}
+
+	focus = {
+		id = MNC_finished_education
+		icon = GFX_focus_generic_socialist_science
+		prerequisite = { focus = MNC_back_to_raiding }
+		x = 1
+		y = 1
+		relative_position_id = MNC_back_to_raiding
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_finished_education"
+			add_research_slot = 1
+			decrease_illiteracy = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = MNC_fix_economy_c
+		icon = GFX_goal_generic_soviet_construction
+		prerequisite = { focus = MNC_finished_education }
+		prerequisite = { focus = MNC_secret_police }
+		x = 1
+		y = 3
+		relative_position_id = MNC_back_to_raiding
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_fix_economy_c"
+			remove_ideas = MNC_back_on_track
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = MNC_revolutionary_fervour
+		icon = GFX_goal_support_communism
+		prerequisite = { focus = MNC_back_to_raiding }
+		x = -1
+		y = 1
+		relative_position_id = MNC_back_to_raiding
+		cost = 7.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_revolutionary_fervour"
+			add_manpower = 5000
+			add_stability = 0.05
+			add_war_support = 0.10
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_revolutionary_guard
+		icon = GFX_focus_YUG_pan_slavic_congress
+		prerequisite = { focus = MNC_secret_police }
+		prerequisite = { focus = MNC_revolutionary_fervour }
+		x = -1
+		y = 3
+		relative_position_id = MNC_back_to_raiding
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_revolutionary_guard"
+			swap_ideas = {
+				remove_idea = MNC_communist_guard
+				add_idea = MNC_revolutionary_guard_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = MNC_secret_police
+		icon = GFX_goal_secret_agents
+		prerequisite = { focus = MNC_revolutionary_fervour }
+		prerequisite = { focus = MNC_finished_education }
+		x = 0
+		y = 2
+		relative_position_id = MNC_back_to_raiding
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_secret_police"
+			if = {
+				limit = {
+					has_dlc = "La Resistance"
+				}
+				add_ideas = MNC_secret_police_idea_lar
+			}
+			else = {
+				add_ideas = MNC_secret_police_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = MNC_new_society
+		icon = GFX_goal_HOL_council_communism
+		prerequisite = { focus = MNC_fix_economy_c }
+		prerequisite = { focus = MNC_revolutionary_guard }
+		x = 0
+		y = 4
+		relative_position_id = MNC_back_to_raiding
+		cost = 10.00
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_new_society"
+			add_political_power = 50
+			increase_society_development = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = MNC_new_SSR
+		icon = GFX_focus_generic_soviet_politics
+		cost = 5.00
+		prerequisite = { focus = MNC_new_society }
+		x = 0
+		y = 6
+		relative_position_id = MNC_back_to_raiding
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus MNC_new_SSR"
+			country_event = { days = 1 id = mountain.21 }
+		}
+	}
+
+	
